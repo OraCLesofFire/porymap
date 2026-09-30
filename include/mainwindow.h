@@ -235,11 +235,15 @@ private slots:
     void on_actionMove_triggered();
     void on_actionMap_Shift_triggered();
     void on_actionTile_Select_triggered();
+    void on_actionFill_Selection_triggered();
+    void on_actionShuffle_Selection_triggered();
+    void on_actionSelect_None_triggered();
 
     void tryAddEventTab(QWidget * tab);
     void displayEventTabs();
     void updateSelectedEvents();
     void updateEvents();
+    void updateTileSelectionActionsEnabled();
 
     void on_toolButton_Paint_clicked();
     void on_toolButton_Select_clicked();
@@ -248,6 +252,9 @@ private slots:
     void on_toolButton_Move_clicked();
     void on_toolButton_Shift_clicked();
     void on_toolButton_TileSelect_clicked();
+    void on_toolButton_FillSelection_clicked();
+    void on_toolButton_ShuffleSelection_clicked();
+    void on_toolButton_SelectNone_clicked();
 
     void onOpenMapListContextMenu(const QPoint &point);
     void currentMetatilesSelectionChanged();

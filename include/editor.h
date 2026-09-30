@@ -288,6 +288,7 @@ signals:
     void mapRulerStatusChanged(const QString &);
     void gridToggled(bool);
     void editActionSet(EditAction newEditAction);
+    void tileSelectionChanged();
 };
 
 #endif // EDITOR_H

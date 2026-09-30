@@ -1251,6 +1251,7 @@ void Editor::onTileSelectionChanged() {
     if (!this->tileSelectionOverlay || !this->map_item) return;
     this->tileSelectionOverlay->setSelection(this->map_item->tileSelection);
     ui->graphicsView_Map->viewport()->update();
+    emit tileSelectionChanged();
 }
 
 void Editor::setStatusFromMapPos(const QPoint &pos) {
@@ -1665,6 +1666,7 @@ void Editor::clearMapMetatiles() {
         delete map_item;
     }
     if (this->tileSelectionOverlay) this->tileSelectionOverlay->setSelection({});
+    emit tileSelectionChanged();
 }
 
 void Editor::displayMapMetatiles() {

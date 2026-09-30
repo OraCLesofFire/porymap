@@ -544,6 +544,57 @@
                           </property>
                         </widget>
                       </item>
+                      <item>
+                        <widget class="QToolButton" name="toolButton_FillSelection">
+                          <property name="enabled">
+                          <bool>false</bool>
+                          </property>
+                          <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fill Selection&lt;/p&gt;&lt;p&gt;Fills the current tile selection using the palette's ratio-weighted brush.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="text">
+                          <string>Fill Selection</string>
+                          </property>
+                          <property name="icon">
+                          <iconset resource="../resources/images.qrc">
+                            <normaloff>:/icons/fill_color_cursor.ico</normaloff>:/icons/fill_color_cursor.ico</iconset>
+                          </property>
+                        </widget>
+                      </item>
+                      <item>
+                        <widget class="QToolButton" name="toolButton_ShuffleSelection">
+                          <property name="enabled">
+                          <bool>false</bool>
+                          </property>
+                          <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Shuffle Selection&lt;/p&gt;&lt;p&gt;Randomly permutes the tiles already in the current selection.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="text">
+                          <string>Shuffle Selection</string>
+                          </property>
+                          <property name="icon">
+                          <iconset resource="../resources/images.qrc">
+                            <normaloff>:/icons/swap_cursor.ico</normaloff>:/icons/swap_cursor.ico</iconset>
+                          </property>
+                        </widget>
+                      </item>
+                      <item>
+                        <widget class="QToolButton" name="toolButton_SelectNone">
+                          <property name="enabled">
+                          <bool>false</bool>
+                          </property>
+                          <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select None&lt;/p&gt;&lt;p&gt;Clears the current tile selection.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="text">
+                          <string>Select None</string>
+                          </property>
+                          <property name="icon">
+                          <iconset resource="../resources/images.qrc">
+                            <normaloff>:/icons/delete.ico</normaloff>:/icons/delete.ico</iconset>
+                          </property>
+                        </widget>
+                      </item>
                      </layout>
                     </widget>
                    </item>
@@ -3086,6 +3137,30 @@
     </property>
     <property name="shortcut">
       <string>T</string>
+    </property>
+  </action>
+  <action name="actionFill_Selection">
+    <property name="text">
+      <string>Fill Selection</string>
+    </property>
+    <property name="shortcut">
+      <string>Ctrl+F</string>
+    </property>
+  </action>
+  <action name="actionShuffle_Selection">
+    <property name="text">
+      <string>Shuffle Selection</string>
+    </property>
+    <property name="shortcut">
+      <string>Ctrl+R</string>
+    </property>
+  </action>
+  <action name="actionSelect_None">
+    <property name="text">
+      <string>Select None</string>
+    </property>
+    <property name="shortcut">
+      <string>Esc</string>
     </property>
   </action>
   <action name="actionTileset_Editor">

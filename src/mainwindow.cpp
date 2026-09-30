@@ -277,6 +277,10 @@ void MainWindow::initExtraShortcuts() {
     pasteAction->setShortcut(QKeySequence("Ctrl+V"));
     connect(pasteAction, &QAction::triggered, this, &MainWindow::paste);
     ui->menuEdit->addAction(pasteAction);
+    ui->menuEdit->addSeparator();
+    ui->menuEdit->addAction(ui->actionFill_Selection);
+    ui->menuEdit->addAction(ui->actionShuffle_Selection);
+    ui->menuEdit->addAction(ui->actionSelect_None);
 }
 
 QObjectList MainWindow::shortcutableObjects() const {
@@ -441,6 +445,7 @@ void MainWindow::initEditor() {
     connect(this->editor, &Editor::wildMonTableEdited, [this] { markMapEdited(this->editor->map); });
     connect(this->editor, &Editor::mapRulerStatusChanged, this, &MainWindow::onMapRulerStatusChanged);
     connect(this->editor, &Editor::editActionSet, this, &MainWindow::setEditActionUi);
+    connect(this->editor, &Editor::tileSelectionChanged, this, &MainWindow::updateTileSelectionActionsEnabled);
     connect(ui->newEventToolButton, &NewEventToolButton::newEventAdded, this->editor, &Editor::addNewEvent);
     connect(ui->toolButton_deleteEvent, &QAbstractButton::clicked, this->editor, &Editor::deleteSelectedEvents);
     connect(ui->graphicsView_Connections, &ConnectionsView::pressedDelete, this->editor, &Editor::removeSelectedConnection);
@@ -2687,6 +2692,9 @@ void MainWindow::on_actionEyedropper_triggered() { on_toolButton_Dropper_clicked
 void MainWindow::on_actionMove_triggered()       { on_toolButton_Move_clicked(); }
 void MainWindow::on_actionMap_Shift_triggered()  { on_toolButton_Shift_clicked(); }
 void MainWindow::on_actionTile_Select_triggered(){ on_toolButton_TileSelect_clicked(); }
+void MainWindow::on_actionFill_Selection_triggered()    { on_toolButton_FillSelection_clicked(); }
+void MainWindow::on_actionShuffle_Selection_triggered() { on_toolButton_ShuffleSelection_clicked(); }
+void MainWindow::on_actionSelect_None_triggered()       { on_toolButton_SelectNone_clicked(); }
 
 void MainWindow::on_toolButton_Paint_clicked()   { editor->setEditAction(Editor::EditAction::Paint); }
 void MainWindow::on_toolButton_Select_clicked()  { editor->setEditAction(Editor::EditAction::Select); }
@@ -2695,6 +2703,30 @@ void MainWindow::on_toolButton_Dropper_clicked() { editor->setEditAction(Editor:
 void MainWindow::on_toolButton_Move_clicked()    { editor->setEditAction(Editor::EditAction::Move); }
 void MainWindow::on_toolButton_Shift_clicked()   { editor->setEditAction(Editor::EditAction::Shift); }
 void MainWindow::on_toolButton_TileSelect_clicked() { editor->setEditAction(Editor::EditAction::TileSelect); }
+void MainWindow::on_toolButton_FillSelection_clicked() {
+    if (editor && editor->map_item)
+        editor->map_item->fillSelection();
+}
+
+void MainWindow::on_toolButton_ShuffleSelection_clicked() {
+    if (editor && editor->map_item)
+        editor->map_item->shuffleSelection();
+}
+
+void MainWindow::on_toolButton_SelectNone_clicked() {
+    if (editor && editor->map_item)
+        editor->map_item->clearTileSelection();
+}
+
+void MainWindow::updateTileSelectionActionsEnabled() {
+    bool hasSelection = editor && editor->map_item && !editor->map_item->tileSelection.isEmpty();
+    ui->actionFill_Selection->setEnabled(hasSelection);
+    ui->actionShuffle_Selection->setEnabled(hasSelection);
+    ui->actionSelect_None->setEnabled(hasSelection);
+    ui->toolButton_FillSelection->setEnabled(hasSelection);
+    ui->toolButton_ShuffleSelection->setEnabled(hasSelection);
+    ui->toolButton_SelectNone->setEnabled(hasSelection);
+}
 
 void MainWindow::setEditActionUi(Editor::EditAction editAction) {
     ui->toolButton_Paint->setChecked(editAction == Editor::EditAction::Paint);
