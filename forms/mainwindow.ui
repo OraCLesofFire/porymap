@@ -527,6 +527,23 @@
                         </property>
                        </widget>
                       </item>
+                      <item>
+                        <widget class="QToolButton" name="toolButton_TileSelect">
+                          <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tile Select&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Click&lt;/span&gt; and drag to select tiles.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ctrl&lt;/span&gt; and drag to remove tiles from the selection.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Right-click&lt;/span&gt; and drag to select a new brush from the map.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          </property>
+                          <property name="text">
+                          <string>Tile Select</string>
+                          </property>
+                          <property name="icon">
+                          <iconset resource="../resources/images.qrc">
+                            <normaloff>:/icons/cursor.ico</normaloff>:/icons/cursor.ico</iconset>
+                          </property>
+                          <property name="checkable">
+                          <bool>true</bool>
+                          </property>
+                        </widget>
+                      </item>
                      </layout>
                     </widget>
                    </item>
@@ -2902,6 +2919,7 @@
     <addaction name="actionEyedropper"/>
     <addaction name="actionMove"/>
     <addaction name="actionMap_Shift"/>
+    <addaction name="actionTile_Select"/>
     <addaction name="separator"/>
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionRegion_Map_Editor"/>
@@ -3061,6 +3079,14 @@
    <property name="shortcut">
     <string>P</string>
    </property>
+  </action>
+  <action name="actionTile_Select">
+    <property name="text">
+      <string>Tile Select</string>
+    </property>
+    <property name="shortcut">
+      <string>T</string>
+    </property>
   </action>
   <action name="actionTileset_Editor">
    <property name="text">

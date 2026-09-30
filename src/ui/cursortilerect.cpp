@@ -12,7 +12,7 @@ CursorTileRect::CursorTileRect(const QSize &tileSize, const QRgb &color, QGraphi
 
 // Size of the cursor may be explicitly enforced depending on settings.
 QSize CursorTileRect::size() const {
-    if (m_singleTileMode)
+    if (m_singleTileMode && !m_rightClickSelectionAnchored)
         return m_tileSize;
 
     if (smartPathInEffect())
@@ -23,20 +23,24 @@ QSize CursorTileRect::size() const {
 }
 
 void CursorTileRect::initAnchor(int coordX, int coordY) {
+    prepareGeometryChange();
     m_anchorCoord = QPoint(coordX, coordY);
     m_anchored = true;
 }
 
 void CursorTileRect::stopAnchor() {
+    prepareGeometryChange();
     m_anchored = false;
 }
 
 void CursorTileRect::initRightClickSelectionAnchor(int coordX, int coordY) {
+    prepareGeometryChange();
     m_anchorCoord = QPoint(coordX, coordY);
     m_rightClickSelectionAnchored = true;
 }
 
 void CursorTileRect::stopRightClickSelectionAnchor() {
+    prepareGeometryChange();
     m_rightClickSelectionAnchored = false;
 }
 
@@ -51,19 +55,17 @@ bool CursorTileRect::smartPathInEffect() const {
 }
 
 void CursorTileRect::updateLocation(int coordX, int coordY) {
-    if (!m_singleTileMode) {
-        if (m_rightClickSelectionAnchored) {
-            coordX = qMin(coordX, m_anchorCoord.x());
-            coordY = qMin(coordY, m_anchorCoord.y());
-        } else if (m_anchored && !smartPathInEffect()) {
-            int xDiff = coordX - m_anchorCoord.x();
-            int yDiff = coordY - m_anchorCoord.y();
-            if (xDiff < 0 && xDiff % m_selectionSize.width() != 0) xDiff -= m_selectionSize.width();
-            if (yDiff < 0 && yDiff % m_selectionSize.height() != 0) yDiff -= m_selectionSize.height();
+    if (m_rightClickSelectionAnchored) {
+        coordX = qMin(coordX, m_anchorCoord.x());
+        coordY = qMin(coordY, m_anchorCoord.y());
+    } else if (!m_singleTileMode && m_anchored && !smartPathInEffect()) {
+        int xDiff = coordX - m_anchorCoord.x();
+        int yDiff = coordY - m_anchorCoord.y();
+        if (xDiff < 0 && xDiff % m_selectionSize.width() != 0) xDiff -= m_selectionSize.width();
+        if (yDiff < 0 && yDiff % m_selectionSize.height() != 0) yDiff -= m_selectionSize.height();
 
-            coordX = m_anchorCoord.x() + (xDiff / m_selectionSize.width()) * m_selectionSize.width();
-            coordY = m_anchorCoord.y() + (yDiff / m_selectionSize.height()) * m_selectionSize.height();
-        }
+        coordX = m_anchorCoord.x() + (xDiff / m_selectionSize.width()) * m_selectionSize.width();
+        coordY = m_anchorCoord.y() + (yDiff / m_selectionSize.height()) * m_selectionSize.height();
     }
 
     this->setX(coordX * m_tileSize.width());

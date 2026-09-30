@@ -47,6 +47,8 @@ void MapView::drawForeground(QPainter *painter, const QRectF&) {
         editor->playerViewRect->paint(painter, &option, this);
     if (editor->cursorMapTileRect && editor->cursorMapTileRect->isVisible())
         editor->cursorMapTileRect->paint(painter, &option, this);
+    if (editor->tileSelectionOverlay)
+        editor->tileSelectionOverlay->paint(painter, &option, this);
 }
 
 void MapView::clearOverlayMap() {

@@ -3,6 +3,8 @@
 #include "log.h"
 #include "scripting.h"
 
+#include <QRandomGenerator>
+#include <algorithm>
 #include "editcommands.h"
 
 #define SWAP(a, b) do { if (a != b) { a ^= b; b ^= a; a ^= b; } } while (0)
@@ -685,6 +687,146 @@ void LayoutPixmapItem::select(QGraphicsSceneMouseEvent *event) {
             }
         }
     }
+}
+
+void LayoutPixmapItem::tileSelect(QGraphicsSceneMouseEvent *event) {
+    if (event->type() != QEvent::GraphicsSceneMousePress && event->type() != QEvent::GraphicsSceneMouseMove)
+        return;
+    if (!(event->buttons() & Qt::LeftButton))
+        return;
+
+    QPoint pos = Metatile::coordFromPixmapCoord(event->pos());
+    if (pos.x() < 0 || pos.y() < 0 || pos.x() >= this->layout->getWidth() || pos.y() >= this->layout->getHeight())
+        return;
+
+    if (event->modifiers() & Qt::ControlModifier) {
+        tileSelection.remove(pos);
+    } else {
+        tileSelection.insert(pos);
+    }
+    emit tileSelectionChanged();
+}
+
+void LayoutPixmapItem::fillSelection() {
+    if (!layout || tileSelection.isEmpty())
+        return;
+
+    MetatileSelection paletteSelection = this->metatileSelector->getMetatileSelection();
+
+    // Each enabled cell of the current brush is one "weighted unit" — a tile that
+    // appears N times in the brush gets N units, so its share of the fill is
+    // proportional to how much of the brush it occupies.
+    QList<int> enabledIndices;
+    for (int i = 0; i < paletteSelection.metatileItems.size(); i++) {
+        if (paletteSelection.metatileItems.at(i).enabled)
+            enabledIndices.append(i);
+    }
+    if (enabledIndices.isEmpty())
+        return;
+
+    int n = tileSelection.size();
+    int total = enabledIndices.size();
+
+    // Largest-remainder rounding: give every unit its exact share of n, then hand the
+    // few leftover slots (lost to rounding down) to the units with the biggest
+    // remainders, so the counts always sum to exactly n and stay as close to the
+    // true ratio as integer math allows.
+    QList<int> counts;
+    QList<double> remainders;
+    int assigned = 0;
+    for (int i = 0; i < total; i++) {
+        double exact = (double)n / total;
+        int count = (int)exact;
+        counts.append(count);
+        remainders.append(exact - count);
+        assigned += count;
+    }
+    int leftover = n - assigned;
+
+    // Shuffle tie order before sorting by remainder, so ties between equally-weighted
+    // tiles (common — e.g. a plain 50/50 palette) aren't always broken the same way.
+    QList<int> order;
+    for (int i = 0; i < total; i++) order.append(i);
+    for (int i = order.size() - 1; i > 0; i--) {
+        int j = QRandomGenerator::global()->bounded(i + 1);
+        order.swapItemsAt(i, j);
+    }
+    std::stable_sort(order.begin(), order.end(), [&](int a, int b) {
+        return remainders[a] > remainders[b];
+    });
+    for (int i = 0; i < leftover; i++)
+        counts[order[i]]++;
+
+    // Expand into one list entry per tile to paint, then Fisher-Yates shuffle it so the
+    // ratio is exact but which selected tile gets which brush tile is random.
+    QList<int> fillIndices;
+    for (int i = 0; i < total; i++)
+        for (int c = 0; c < counts[i]; c++)
+            fillIndices.append(enabledIndices.at(i));
+    for (int i = fillIndices.size() - 1; i > 0; i--) {
+        int j = QRandomGenerator::global()->bounded(i + 1);
+        fillIndices.swapItemsAt(i, j);
+    }
+
+    Blockdata oldMetatiles = this->layout->blockdata;
+
+    int cursor = 0;
+    for (const QPoint &pos : tileSelection) {
+        Block block;
+        if (this->layout->getBlock(pos, &block)) {
+            int paletteIndex = fillIndices.at(cursor);
+            block.setMetatileId(paletteSelection.metatileItems.at(paletteIndex).metatileId);
+            if (paletteSelection.hasCollision && paletteSelection.collisionItems.length() == paletteSelection.metatileItems.length()) {
+                CollisionSelectionItem collisionItem = paletteSelection.collisionItems.at(paletteIndex);
+                block.setCollision(collisionItem.collision);
+                block.setElevation(collisionItem.elevation);
+            }
+            this->layout->setBlock(pos, block, true);
+        }
+        cursor++;
+    }
+
+    if (this->layout->blockdata != oldMetatiles) {
+        this->layout->editHistory.push(new FillSelection(this->layout, oldMetatiles, this->layout->blockdata, actionId_));
+        actionId_++;
+    }
+}
+
+void LayoutPixmapItem::shuffleSelection() {
+    if (!layout || tileSelection.size() < 2)
+        return; // 0 or 1 tiles: nothing to permute
+
+    QList<QPoint> positions(tileSelection.begin(), tileSelection.end());
+    QList<Block> blocks;
+    for (const QPoint &pos : positions) {
+        Block block;
+        this->layout->getBlock(pos, &block);
+        blocks.append(block);
+    }
+
+    // True Fisher-Yates permutation of the collected Blocks — metatile, collision and
+    // elevation move together since Block bundles all three.
+    for (int i = blocks.size() - 1; i > 0; i--) {
+        int j = QRandomGenerator::global()->bounded(i + 1);
+        blocks.swapItemsAt(i, j);
+    }
+
+    Blockdata oldMetatiles = this->layout->blockdata;
+
+    for (int i = 0; i < positions.size(); i++)
+        this->layout->setBlock(positions.at(i), blocks.at(i), true);
+
+    if (this->layout->blockdata != oldMetatiles) {
+        this->layout->editHistory.push(new ShuffleSelection(this->layout, oldMetatiles, this->layout->blockdata, actionId_));
+        actionId_++;
+    }
+}
+
+void LayoutPixmapItem::clearTileSelection() {
+    if (tileSelection.isEmpty())
+        return;
+    tileSelection.clear();
+    emit tileSelectionChanged();
 }
 
 void LayoutPixmapItem::draw(bool ignoreCache) {

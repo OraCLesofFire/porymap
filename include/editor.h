@@ -27,6 +27,7 @@
 #include "gridsettings.h"
 #include "movablerect.h"
 #include "cursortilerect.h"
+#include "tileselectionoverlay.h"
 #include "mapruler.h"
 #include "encountertablemodel.h"
 
@@ -144,6 +145,7 @@ public:
 
     MovableRect *playerViewRect = nullptr;
     CursorTileRect *cursorMapTileRect = nullptr;
+    TileSelectionOverlay *tileSelectionOverlay = nullptr;
 
     QPointer<QGraphicsScene> scene_metatiles = nullptr;
     QPointer<QGraphicsScene> scene_current_metatile_selection = nullptr;
@@ -159,7 +161,7 @@ public:
     QPointer<ConnectionPixmapItem> selected_connection_item = nullptr;
     QPointer<MapConnection> connection_to_select = nullptr;
 
-    enum class EditAction { None, Paint, Select, Fill, Shift, Pick, Move };
+    enum class EditAction { None, Paint, Select, Fill, Shift, Pick, Move, TileSelect};
     void setEditAction(EditAction editAction);
     EditAction getEditAction() const;
     EditAction getMapEditAction() const { return this->mapEditAction; }
@@ -272,6 +274,7 @@ private slots:
     void onMapHoverChanged(const QPoint &pos);
     void onMapHoverCleared();
     void onSelectedMetatilesChanged();
+    void onTileSelectionChanged();
     void onWheelZoom(int);
 
 signals:

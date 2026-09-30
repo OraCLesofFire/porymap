@@ -234,6 +234,7 @@ private slots:
     void on_actionEyedropper_triggered();
     void on_actionMove_triggered();
     void on_actionMap_Shift_triggered();
+    void on_actionTile_Select_triggered();
 
     void tryAddEventTab(QWidget * tab);
     void displayEventTabs();
@@ -246,6 +247,7 @@ private slots:
     void on_toolButton_Dropper_clicked();
     void on_toolButton_Move_clicked();
     void on_toolButton_Shift_clicked();
+    void on_toolButton_TileSelect_clicked();
 
     void onOpenMapListContextMenu(const QPoint &point);
     void currentMetatilesSelectionChanged();

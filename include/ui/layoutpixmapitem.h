@@ -4,6 +4,7 @@
 #include "settings.h"
 #include "metatileselector.h"
 #include <QGraphicsPixmapItem>
+#include <QSet>
 
 class Layout;
 
@@ -52,6 +53,7 @@ public:
 
     QPoint selection_origin;
     QList<QPoint> selection;
+    QSet<QPoint> tileSelection;
 
     virtual void paint(QGraphicsSceneMouseEvent*);
     virtual void floodFill(QGraphicsSceneMouseEvent*);
@@ -80,6 +82,11 @@ public:
     virtual void pick(QGraphicsSceneMouseEvent*);
     virtual void select(QGraphicsSceneMouseEvent*);
     virtual void shift(QGraphicsSceneMouseEvent*);
+    void tileSelect(QGraphicsSceneMouseEvent *event);
+    void fillSelection();
+    void shuffleSelection();
+    void clearTileSelection();
+
     void shift(int xDelta, int yDelta, bool fromScriptCall = false);
     virtual void draw(bool ignoreCache = false);
 
@@ -101,6 +108,7 @@ private:
     QPoint lastMetatileSelectionPos = QPoint(-1,-1);
 
 signals:
+    void tileSelectionChanged();
     void startPaint(QGraphicsSceneMouseEvent *, LayoutPixmapItem *);
     void endPaint(QGraphicsSceneMouseEvent *, LayoutPixmapItem *);
     void mouseEvent(QGraphicsSceneMouseEvent *, LayoutPixmapItem *);

@@ -35,7 +35,8 @@ public:
     void stopAnchor();
     void initRightClickSelectionAnchor(int coordX, int coordY);
     void stopRightClickSelectionAnchor();
-
+    bool getRightClickSelectionAnchored() const { return m_rightClickSelectionAnchored; }
+    
     void setSmartPathMode(bool enable) { m_smartPathMode = enable; }
     bool getSmartPathMode() const { return m_smartPathMode; }
 

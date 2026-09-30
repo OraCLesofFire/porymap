@@ -39,6 +39,8 @@ enum CommandId {
     ID_MapConnectionChangeMap,
     ID_MapConnectionAdd,
     ID_MapConnectionRemove,
+    ID_FillSelection,
+    ID_ShuffleSelection,
 };
 
 #define IDMask_EventType_Object  (1 << 8)
@@ -133,6 +135,33 @@ public:
     int id() const override { return CommandId::ID_BucketFillMetatile; }
 };
 
+/// Implements a command to commit a ratio-weighted fill
+/// onto a freeform tile selection.
+class FillSelection : public PaintMetatile {
+public:
+    FillSelection(Layout *layout,
+        const Blockdata &oldMetatiles, const Blockdata &newMetatiles,
+        unsigned actionId, QUndoCommand *parent = nullptr)
+      : PaintMetatile(layout, oldMetatiles, newMetatiles, actionId, parent) {
+        setText("Fill Selection");
+    }
+
+    int id() const override { return CommandId::ID_FillSelection; }
+};
+
+/// Implements a command to commit a true shuffle of the Blocks
+/// (metatile + collision + elevation) within a freeform tile selection.
+class ShuffleSelection : public PaintMetatile {
+public:
+    ShuffleSelection(Layout *layout,
+        const Blockdata &oldMetatiles, const Blockdata &newMetatiles,
+        unsigned actionId, QUndoCommand *parent = nullptr)
+      : PaintMetatile(layout, oldMetatiles, newMetatiles, actionId, parent) {
+        setText("Shuffle Selection");
+    }
+
+    int id() const override { return CommandId::ID_ShuffleSelection; }
+};
 
 
 /// Implements a command to commit flood fill actions

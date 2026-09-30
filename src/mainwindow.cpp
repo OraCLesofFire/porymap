@@ -2686,6 +2686,7 @@ void MainWindow::on_actionFlood_Fill_triggered() { on_toolButton_Fill_clicked();
 void MainWindow::on_actionEyedropper_triggered() { on_toolButton_Dropper_clicked(); }
 void MainWindow::on_actionMove_triggered()       { on_toolButton_Move_clicked(); }
 void MainWindow::on_actionMap_Shift_triggered()  { on_toolButton_Shift_clicked(); }
+void MainWindow::on_actionTile_Select_triggered(){ on_toolButton_TileSelect_clicked(); }
 
 void MainWindow::on_toolButton_Paint_clicked()   { editor->setEditAction(Editor::EditAction::Paint); }
 void MainWindow::on_toolButton_Select_clicked()  { editor->setEditAction(Editor::EditAction::Select); }
@@ -2693,6 +2694,7 @@ void MainWindow::on_toolButton_Fill_clicked()    { editor->setEditAction(Editor:
 void MainWindow::on_toolButton_Dropper_clicked() { editor->setEditAction(Editor::EditAction::Pick); }
 void MainWindow::on_toolButton_Move_clicked()    { editor->setEditAction(Editor::EditAction::Move); }
 void MainWindow::on_toolButton_Shift_clicked()   { editor->setEditAction(Editor::EditAction::Shift); }
+void MainWindow::on_toolButton_TileSelect_clicked() { editor->setEditAction(Editor::EditAction::TileSelect); }
 
 void MainWindow::setEditActionUi(Editor::EditAction editAction) {
     ui->toolButton_Paint->setChecked(editAction == Editor::EditAction::Paint);
@@ -2701,6 +2703,7 @@ void MainWindow::setEditActionUi(Editor::EditAction editAction) {
     ui->toolButton_Dropper->setChecked(editAction == Editor::EditAction::Pick);
     ui->toolButton_Move->setChecked(editAction == Editor::EditAction::Move);
     ui->toolButton_Shift->setChecked(editAction == Editor::EditAction::Shift);
+    ui->toolButton_TileSelect->setChecked(editAction == Editor::EditAction::TileSelect);
 }
 
 void MainWindow::onOpenConnectedMap(MapConnection *connection) {
