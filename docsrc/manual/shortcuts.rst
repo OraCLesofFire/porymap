@@ -27,6 +27,7 @@ Main Window
    Eyedropper, ``E``
    Move, ``M``
    Shift, ``S``
+   Tile Select, ``T``
 
 .. csv-table::
    :header: Actions
@@ -61,7 +62,9 @@ Main Window
    Toggle Player View, ``V``
    Duplicate Event(s), ``Ctrl+D`` while selected
    Delete Event(s), ``DEL`` while selected
-
+   Fill Selection, ``Ctrl+F``
+   Shuffle Selection, ``Ctrl+R``
+   Select None, ``Esc``
 
 
 Tileset Editor

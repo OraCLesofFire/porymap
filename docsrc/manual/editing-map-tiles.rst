@@ -120,6 +120,23 @@ The Bucket Fill Tool |bucket-fill-tool| (``Tools > Bucket Fill``, or ``B``) work
 
 Holding down the ``Ctrl`` key (or ``Cmd``, on macOS) while using the Bucket Fill Tool will fill *all* matching metatiles on the map, rather that just the contiguous region.
 
+Tile Select Tool
+-----------------
+
+The Tile Select Tool (``Tools > Tile Select``, or ``T``) lets you build a freeform, non-rectangular selection of tiles on the map, independent of the rectangular selection you make in the Metatile Selection Pane. Click and drag to add tiles to the selection.
+
+Holding down the ``Ctrl`` key (or ``Cmd``, on macOS) while dragging removes tiles from the selection instead of adding them.
+
+The selection persists when you switch to another tool and back, so you can touch up something nearby with the Pencil Tool and return to the same selection.
+
+As with the Pencil Tool and Bucket Fill Tool, right-click (or right-click and drag) while using the Tile Select Tool samples a new metatile selection from the map, the same as the Eyedropper Tool.
+
+Once you have an active selection, three actions become available from the toolbar and the ``Edit`` menu:
+
+- **Fill Selection** (``Ctrl+F``) paints the current metatile selection across every tile in the Tile Select selection. If more than one metatile is selected in the Metatile Selection Pane, Porymap distributes them across the selection in the same ratio as your selection, rather than choosing randomly per tile.
+- **Shuffle Selection** (``Ctrl+R``) randomly permutes the metatiles (along with their collision and elevation) already painted on the selected tiles, without reference to the Metatile Selection Pane. Useful for breaking up a repetitive hand-placed pattern, for example scattering a patch of grass or rubble after painting it.
+- **Select None** (``Esc``) clears the current Tile Select selection.
+
 Move Tool
 ---------
 
