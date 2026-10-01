@@ -1393,7 +1393,7 @@ void Editor::onMapStartPaint(QGraphicsSceneMouseEvent *event, LayoutPixmapItem *
     }
 
     QPoint pos = Metatile::coordFromPixmapCoord(event->pos());
-    if (event->buttons() & Qt::RightButton && (this->mapEditAction == EditAction::Paint || this->mapEditAction == EditAction::Fill)) {
+    if (event->buttons() & Qt::RightButton && (this->mapEditAction == EditAction::Paint || this->mapEditAction == EditAction::Fill || this->mapEditAction == EditAction::Pick)) {
         this->cursorMapTileRect->initRightClickSelectionAnchor(pos.x(), pos.y());
     } else {
         this->cursorMapTileRect->initAnchor(pos.x(), pos.y());
