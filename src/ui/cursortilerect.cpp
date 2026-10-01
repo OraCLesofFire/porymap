@@ -12,7 +12,7 @@ CursorTileRect::CursorTileRect(const QSize &tileSize, const QRgb &color, QGraphi
 
 // Size of the cursor may be explicitly enforced depending on settings.
 QSize CursorTileRect::size() const {
-    if (m_singleTileMode)
+    if (m_singleTileMode && !m_rightClickSelectionAnchored)
         return m_tileSize;
 
     if (smartPathInEffect())
