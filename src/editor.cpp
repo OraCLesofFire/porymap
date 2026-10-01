@@ -215,6 +215,8 @@ void Editor::setEditAction(EditAction editAction) {
 
     // The tile cursor can only grow while painting metatiles
     this->cursorMapTileRect->setSingleTileMode(!(editAction == EditAction::Paint && this->editMode == EditMode::Metatiles));
+    if (ui->graphicsView_Map->scene())
+        ui->graphicsView_Map->scene()->update();
 
     auto dragMode = (editAction == EditAction::Move) ? QGraphicsView::ScrollHandDrag : QGraphicsView::NoDrag;
     ui->graphicsView_Map->setDesiredDragMode(dragMode);
