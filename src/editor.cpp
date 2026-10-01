@@ -1398,14 +1398,18 @@ void Editor::onMapStartPaint(QGraphicsSceneMouseEvent *event, LayoutPixmapItem *
     } else {
         this->cursorMapTileRect->initAnchor(pos.x(), pos.y());
     }
+    updateCursorRectVisibility();
+    setCursorRectPos(pos);
 }
 
-void Editor::onMapEndPaint(QGraphicsSceneMouseEvent *, LayoutPixmapItem *) {
+void Editor::onMapEndPaint(QGraphicsSceneMouseEvent *event, LayoutPixmapItem *) {
     if (!canPaintMetatiles()) {
         return;
     }
     this->cursorMapTileRect->stopRightClickSelectionAnchor();
     this->cursorMapTileRect->stopAnchor();
+    updateCursorRectVisibility();
+    setCursorRectPos(Metatile::coordFromPixmapCoord(event->pos()));
 }
 
 void Editor::setSmartPathCursorMode(QGraphicsSceneMouseEvent *event)
