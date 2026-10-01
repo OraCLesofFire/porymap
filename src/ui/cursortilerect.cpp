@@ -51,19 +51,17 @@ bool CursorTileRect::smartPathInEffect() const {
 }
 
 void CursorTileRect::updateLocation(int coordX, int coordY) {
-    if (!m_singleTileMode) {
-        if (m_rightClickSelectionAnchored) {
-            coordX = qMin(coordX, m_anchorCoord.x());
-            coordY = qMin(coordY, m_anchorCoord.y());
-        } else if (m_anchored && !smartPathInEffect()) {
-            int xDiff = coordX - m_anchorCoord.x();
-            int yDiff = coordY - m_anchorCoord.y();
-            if (xDiff < 0 && xDiff % m_selectionSize.width() != 0) xDiff -= m_selectionSize.width();
-            if (yDiff < 0 && yDiff % m_selectionSize.height() != 0) yDiff -= m_selectionSize.height();
+    if (m_rightClickSelectionAnchored) {
+        coordX = qMin(coordX, m_anchorCoord.x());
+        coordY = qMin(coordY, m_anchorCoord.y());
+    } else if (!m_singleTileMode && m_anchored && !smartPathInEffect()) {
+        int xDiff = coordX - m_anchorCoord.x();
+        int yDiff = coordY - m_anchorCoord.y();
+        if (xDiff < 0 && xDiff % m_selectionSize.width() != 0) xDiff -= m_selectionSize.width();
+        if (yDiff < 0 && yDiff % m_selectionSize.height() != 0) yDiff -= m_selectionSize.height();
 
-            coordX = m_anchorCoord.x() + (xDiff / m_selectionSize.width()) * m_selectionSize.width();
-            coordY = m_anchorCoord.y() + (yDiff / m_selectionSize.height()) * m_selectionSize.height();
-        }
+        coordX = m_anchorCoord.x() + (xDiff / m_selectionSize.width()) * m_selectionSize.width();
+        coordY = m_anchorCoord.y() + (yDiff / m_selectionSize.height()) * m_selectionSize.height();
     }
 
     this->setX(coordX * m_tileSize.width());
